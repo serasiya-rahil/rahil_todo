@@ -1,0 +1,143 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<style>
+	.todo-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+		.todo-table th,
+		.todo-table td {
+			padding: 12px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.todo-table th {
+			background-color: #f2f2f2;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.todo-table tbody tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		.todo-table tbody tr:hover {
+			background-color: #e6e6e6;
+		}
+
+			.todo-table tbody tr:hover .highlight-task {
+				background-color: #ffcc99;
+			}
+
+		.todo-table tbody tr:nth-child(odd):hover .highlight-task {
+			background-color: #ccffcc;
+		}
+
+		.todo-table tbody tr:nth-child(3n):hover .highlight-task {
+			background-color: #ffccff;
+		}
+
+		.todo-table td.status {
+			text-transform: capitalize;
+		}
+
+		.todo-table td.priority {
+			font-weight: bold;
+			color: #ff6600;
+		}
+
+		.todo-table td.actions {
+			text-align: center;
+		}
+
+			.todo-table td.actions button {
+				padding: 6px 12px;
+				border: none;
+				background-color: #ff6600;
+				color: #fff;
+				font-size: 14px;
+				cursor: pointer;
+			}
+
+				.todo-table td.actions button:hover {
+					background-color: #cc5500;
+				}
+
+	.alert.info {
+		background-color: #2196F3;
+	}
+
+	
+</style>
+
+<div >
+    <div class="container ">
+        <div class="row p-0 mt-4">
+            <div class="mx-auto  col-lg-4 p-0">
+                <div class="alert alert-info">
+                    <h3>Add New To Do!</h3>
+                </div>
+                <div class="p-4">
+                    <form action="/add-todo/" method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p}}
+                        <hr />
+                        <input type="submit" value="Add Task" class="btn btn-info mx-auto" />
+                    </form>
+                </div>
+            </div>
+			
+            <div class="col">
+				<div class="border">
+					{% if todos|length == 0 %}
+						<div class="alert info">
+							<span class="closebtn">&times;</span>
+							<strong>Congrats!</strong> You have 0 task in Todos, Try adding 1 task and check again!
+						</div>
+					{% else %}
+					<table class="todo-table">
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>Title</th>
+								<th>Description</th>
+								<th>Status</th>
+								<th>Priority</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for todo in todos %}
+							<tr>
+								<td>{{ forloop.counter }}</td>
+								<td>{{ todo.title }}</td>
+								<td>{{ todo.description }}</td>
+								<td>{{ todo.status }}</td>
+								<td>{{ todo.priority }}</td>
+								<td>
+									<a href="/delete-todo/{{todo.id}}" title="Delete To Do">🗑</a>
+									{% if todo.status == 'Pending' %}
+
+									<a href="/change-status/{{todo.id}}/Complete" title="Mark as Completed">✔</a>
+									{% else %}
+
+									<a href="/change-status/{{todo.id}}/Pending" title="Mark as Pending">⏳</a>
+									{% endif %}
+									<a href="/update-todo/{{todo.id}}" title="Update">Update</a>
+								</td>
+							</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+					{%endif %}
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
