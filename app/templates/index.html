@@ -1,4 +1,4 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <style>
 	.todo-table {
@@ -65,40 +65,190 @@
 					background-color: #cc5500;
 				}
 
-	.alert.info {
-		background-color: #2196F3;
+	.pending {
+		background-image: linear-gradient( 135deg, #f00202 10%, #32CCBC 100%);
+		color: black;
+		text-decoration: none;
+		padding: 15px 26px;
+		position: relative;
+		display: inline-block;
+		border-radius: 15px;
 	}
 
-	
+		.pending:hover {
+			background: #e35f5f;
+		}
+
+		.pending .badge {
+			position: absolute;
+			top: -10px;
+			right: -10px;
+			padding: 5px 10px;
+			border-radius: 50%;
+			background: red;
+			color: white;
+		}
+
+	.completed {
+		background-image: linear-gradient(to right, #1D976C 0%, #93F9B9 51%, #1D976C 100%);
+		color: black;
+		text-decoration: none;
+		padding: 15px 26px;
+		position: relative;
+		display: inline-block;
+		border-radius: 15px;
+	}
+
+
+
+	.btn-grad:hover {
+		background-position: right center; /* change the direction of the change here */
+		color: #fff;
+		font-weight: bold;
+		text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+	}
+
+	.completed:hover {
+		background: #42f5ad;
+	}
+
+	.completed .badge {
+		position: absolute;
+		top: -10px;
+		right: -10px;
+		padding: 5px 10px;
+		border-radius: 100%;
+		background: red;
+		color: white;
+		font-weight: bold;
+	}
+
+	.insight {
+		background-image: linear-gradient(to right, #4776E6 0%, #8E54E9 51%, #4776E6 100%);
+		color: black;
+		text-decoration: none;
+		padding: 15px 26px;
+		position: relative;
+		display: inline-block;
+		border-radius: 15px;
+		background-blend-mode: soft-light
+	}
+
+
+
+		.insight:hover {
+			background-position: right center; /* change the direction of the change here */
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.insight:hover {
+			background: #0384fc;
+		}
+
+
+	#addHeader {
+		background-image: linear-gradient(to right, #4776E6 0%, #8E54E9 51%, #4776E6 100%);
+		color: white;
+		text-decoration: none;
+		padding: 15px 26px;
+		position: relative;
+		display: inline-block;
+		border-radius: 15px;
+	}
+
+
+
+		#addHeader:hover {
+			background-position: right center; /* change the direction of the change here */
+			color: #fff;
+			text-decoration: none;
+		}
+
+		#addHeader:hover {
+			background: #0384fc;
+		}
+
+	#welcome:hover {
+		transform: scaleX(-1) rotateY(180deg);
+	}
+
+
+	body {
+		background-image: linear-gradient( 173.1deg, rgba(226,66,249,0.94) 10.2%, rgba(79,147,249,1) 77.3% );
+	}
 </style>
 
-<div >
-    <div class="container ">
-        <div class="row p-0 mt-4">
-            <div class="mx-auto  col-lg-4 p-0">
-                <div class="alert alert-info">
-                    <h3>Add New To Do!</h3>
-                </div>
-                <div class="p-4">
-                    <form action="/add-todo/" method="POST">
-                        {% csrf_token %}
-                        {{ form.as_p}}
-                        <hr />
-                        <input type="submit" value="Add Task" class="btn btn-info mx-auto" />
-                    </form>
-                </div>
-            </div>
-			
-            <div class="col">
-				<div class="border">
+<div class="abc" id="abc">
+
+	<div id="welcome" class="rounded page-holder bg-cover">
+
+		<div class="container py-0">
+			<header class="text-center text-white py-0">
+				<h1 class="display-4 font-weight-bold mb-4">Welcome! {{user}}</h1>
+				<b>
+					<p class="lead mb-0">Welcome to our Todo List Application! Stay organized, boost productivity, and accomplish more with ease.</p>
+				</b>
+				<br />
+			</header>
+
+
+		</div>
+	</div>
+	<div class="container shadow-lg p-3 mb-5 bg-body rounded">
+		<div class="row p-0 mt-4">
+
+			<div class="mx-auto  col-lg-4 p-1">
+				<center>
+					<div class="alert alert-success" id="addHeader">
+						<span>Add New To Do! </span>
+
+					</div>
+
+				</center>
+
+				<div class="p-4">
+					<form action="/add-todo/" method="POST">
+						{% csrf_token %}
+						{{ form.as_p}}
+						<hr />
+						<input type="submit" value="Add Task" class="btn btn-info mx-auto" />
+					</form>
+				</div>
+			</div>
+
+			<div class="col p-1">
+				<div>
 					{% if todos|length == 0 %}
-						<div class="alert info">
-							<span class="closebtn">&times;</span>
-							<strong>Congrats!</strong> You have 0 task in Todos, Try adding 1 task and check again!
-						</div>
+					<div class="alert info p-0">
+						<span class="insight">&times;<strong>Congrats!</strong> You have 0 task in Todos, Try adding 1 task and check again!</span>
+
+					</div>
 					{% else %}
-					<table class="todo-table">
+					<table class="todo-table shadow-lg">
 						<thead>
+							<a class="pending">
+								<center>
+									<span><b>Pending/In-Progress Task</b></span>
+									<span class="badge">{{pending_count}}</span>
+								</center>
+							</a>
+							&nbsp;
+							<a href="" class="completed">
+								<center>
+									<span><b>Completed Task</b></span>
+									<span class="badge">{{Complete_count}}</span>
+								</center>
+							</a>
+							&nbsp;
+							<a href="" class="insight">
+								<center>
+									<span><b>Percent Completed {{percentage}} %</b></span>
+
+								</center>
+							</a>
+							<br />
+							<br />
 							<tr>
 								<th>No.</th>
 								<th>Title</th>
@@ -118,9 +268,10 @@
 								<td>{{ todo.priority }}</td>
 								<td>
 									<a href="/delete-todo/{{todo.id}}" title="Delete To Do">🗑</a>
-									{% if todo.status == 'Pending' %}
+									{% if todo.status == 'Pending' or todo.status == 'In Progress' %}
 
-									<a href="/change-status/{{todo.id}}/Complete" title="Mark as Completed">✔</a>
+									<a href="/change-status/{{todo.id}}/Completed" title="Mark as Completed">✔</a>
+
 									{% else %}
 
 									<a href="/change-status/{{todo.id}}/Pending" title="Mark as Pending">⏳</a>
@@ -131,13 +282,16 @@
 							{% endfor %}
 
 						</tbody>
+
 					</table>
+
 					{%endif %}
 				</div>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </div>
+
 {% endblock %}
 
 
